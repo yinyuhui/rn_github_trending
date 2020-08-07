@@ -1,10 +1,19 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Button } from 'react-native'
 
-const Trending = () => {
+const Trending = (props) => {
+    const {
+        navigation: { setParams },
+    } = props
     return (
         <View style={styles.container}>
             <Text style={styles.welcome}>Trending</Text>
+            <Button
+                title="修改主题色"
+                onPress={() => {
+                    setParams({ tintColor: 'red' })
+                }}
+            />
         </View>
     )
 }
