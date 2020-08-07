@@ -1,25 +1,9 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import DynamicTabNavigator from '../navigator/DynamicTabNavigator'
 
-const Home = () => {
-    return (
-        <View style={styles.container}>
-            <Text>home</Text>
-        </View>
-    )
+const Home = (props) => {
+    return <DynamicTabNavigator navigation={props.navigation} />
 }
+Home.router = DynamicTabNavigator.router
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#f5fcff',
-    },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 20,
-    },
-})
 export default Home
