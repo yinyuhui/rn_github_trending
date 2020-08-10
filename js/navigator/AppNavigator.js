@@ -3,6 +3,7 @@ import { createStackNavigator } from 'react-navigation-stack'
 
 import Welcome from '../pages/Welcome'
 import Home from '../pages/Home'
+import Test from '../pages/Test'
 
 const InitNavigator = createStackNavigator({
     Welcome: {
@@ -20,6 +21,7 @@ const MainNavigator = createStackNavigator({
             headerShown: false,
         },
     },
+    Test,
 })
 
 const SwitchNavigator = createSwitchNavigator(
