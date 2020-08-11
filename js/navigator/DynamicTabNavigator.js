@@ -63,7 +63,6 @@ const TABS = {
 }
 
 const tabBarComponent = (props) => {
-    console.log(props)
     // 这里不要用 useState，会死循环
     const theme = useRef({
         tintColor: '',

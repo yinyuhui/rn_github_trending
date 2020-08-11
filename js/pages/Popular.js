@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { createMaterialTopTabNavigator } from 'react-navigation-tabs'
 import { createAppContainer } from 'react-navigation'
@@ -25,7 +25,7 @@ const getPopularTabs = (tabs) => {
     let topTabs = Object.create(null)
     tabs.forEach((item) => {
         topTabs[item] = {
-            screen: PopularTab,
+            screen: (props) => <PopularTab {...props} />,
             navigationOptions: {
                 tabBarLabel: item,
             },
@@ -46,19 +46,25 @@ const getPopularTabs = (tabs) => {
     )
 }
 
-// FIXME: 动态 tab，但 PopularTabs 只能在 Popular 外部定义，如何根据后端返回动态加载
-TABS = ['JS', 'Vue', 'React', 'react native', 'Android', 'IOS']
-PopularTabs = getPopularTabs(TABS)
-
 const Popular = (props) => {
+    console.disableYellowBox = true
+    // FIXME: 动态 tab，但 PopularTabs 只能在 Popular 外部定义，如何根据后端返回动态加载
+    TABS = ['JS', 'Vue', 'React', 'react native', 'Android', 'IOS']
+    const [tabs, setTabs] = useState(['JS'])
+    useEffect(() => {
+        setTimeout(() => {
+            setTabs(TABS)
+        }, 300)
+    }, [])
+
+    const PopularTabs = getPopularTabs(tabs)
+
     return (
         <View style={styles.container}>
-            <PopularTabs navigation={props.navigation} />
+            {PopularTabs ? <PopularTabs /> : null}
         </View>
     )
 }
-
-Popular.router = PopularTabs.router
 
 const styles = StyleSheet.create({
     container: {

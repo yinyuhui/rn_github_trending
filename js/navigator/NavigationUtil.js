@@ -10,7 +10,11 @@ export default class NavigationUtil {
      * @memberof NavigationUtil
      */
     static goPage = (page, params) => {
-        navigation = NavigationUtil.navigation
+        const { navigation } = NavigationUtil
+        if (!navigation) {
+            console.error('navigation 为空 ')
+            return
+        }
         navigation.navigate(page, params)
     }
 }

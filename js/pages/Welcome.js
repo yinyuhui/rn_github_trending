@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
+import NavigationUtil from '../navigator/NavigationUtil'
 
 const Welcome = (props) => {
     useEffect(() => {
         let timer = setTimeout(() => {
             // 跳转到首页
-            global.navigationUtil.resetToHome(props)
+            NavigationUtil.resetToHome(props)
         }, 2000)
         return () => {
             clearTimeout(timer)
