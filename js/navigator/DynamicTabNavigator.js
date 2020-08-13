@@ -1,4 +1,5 @@
-import React, { useRef } from 'react'
+import React from 'react'
+import { useSelector } from 'react-redux'
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Entypo from 'react-native-vector-icons/Entypo'
@@ -63,41 +64,17 @@ const TABS = {
 }
 
 const tabBarComponent = (props) => {
-    // 这里不要用 useState，会死循环
-    const theme = useRef({
-        tintColor: '',
-        updateTime: Date.now(),
-    })
-
-    // 先拿到当前激活的导航
-    const {
-        navigation: {
-            state: { routes, index },
-        },
-    } = props
-
-    // 再拿到这个激活的导航的 params
-    const params = routes[index].params
-
-    // 如果更新了，就把当前存的值更新
-    if (params && params.tintColor) {
-        theme.current = { tintColor: params.tintColor, updateTime: Date.now() }
-    }
-
-    // theme.tintColor 可能不存在，这时取默认的
-    return (
-        <BottomTabBar
-            {...props}
-            activeTintColor={theme.current.tintColor || props.activeTintColor}
-        />
-    )
+    const themeState = useSelector((state) => state.theme)
+    return <BottomTabBar {...props} activeTintColor={themeState.theme} />
 }
 
-const DynamicNavigator = () => {
+const DynamicNavigator = (props) => {
     // 从预设导航中选出要渲染的
     // const { Popular, Trending, Favorite, My } = TABS
     // 把要渲染的组装成新的对象，用作 createBottomTabNavigator 的第一个参数
     // const tabs = { Popular, Trending, Favorite, My }
+
+    // 可以把创建的导航存起来 避免重复渲染导致的性能消耗
     return createBottomTabNavigator(TABS, {
         tabBarComponent,
     })

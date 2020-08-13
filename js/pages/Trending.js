@@ -1,7 +1,10 @@
 import React from 'react'
 import { View, Text, StyleSheet, Button } from 'react-native'
+import { useDispatch } from 'react-redux'
+import actions from '../action'
 
 const Trending = (props) => {
+    const dispatch = useDispatch()
     const {
         navigation: { setParams },
     } = props
@@ -11,7 +14,7 @@ const Trending = (props) => {
             <Button
                 title="修改主题色"
                 onPress={() => {
-                    setParams({ tintColor: 'red' })
+                    dispatch(actions.onThemeChange('red'))
                 }}
             />
         </View>
