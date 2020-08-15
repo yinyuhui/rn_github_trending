@@ -1,13 +1,22 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, Text, StyleSheet, Button } from 'react-native'
 import { useDispatch } from 'react-redux'
 import actions from '../action'
-
+import { clearAll } from '../utils/dao/DataStore'
 const Trending = (props) => {
     const dispatch = useDispatch()
     const {
         navigation: { setParams },
     } = props
+
+    const [showData, setShowData] = useState('showData')
+
+    const getData = async () => {
+        const url =
+            'https://www.fastmock.site/mock/ea41ac236a32536f6d742544aeee0947/mock/test'
+        const result = await global.$get(url)
+        setShowData(JSON.stringify(result))
+    }
     return (
         <View style={styles.container}>
             <Text style={styles.welcome}>Trending</Text>
@@ -17,6 +26,9 @@ const Trending = (props) => {
                     dispatch(actions.onThemeChange('red'))
                 }}
             />
+            <Button title="获取数据" onPress={getData} />
+            <Button title="清空" onPress={clearAll} />
+            <Text>{showData}</Text>
         </View>
     )
 }

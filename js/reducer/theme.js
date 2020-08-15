@@ -1,7 +1,7 @@
 import Types from '../action/types'
 
 const initState = {
-    theme: 'blue',
+    theme: '#dc7275',
 }
 
 export default function (state = initState, action) {

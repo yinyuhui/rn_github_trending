@@ -36,7 +36,10 @@ const getPopularTabs = (tabs) => {
             tabBarOptions: {
                 upperCaseLabel: false,
                 scrollEnabled: true,
-                style: { minWidth: 100, backgroundColor: '#776297' },
+                style: {
+                    minWidth: 100,
+                    backgroundColor: 'rgba(220,114,117,.8)',
+                },
                 indicatorStyle: { height: 2, backgroundColor: '#fff' },
                 labelStyle: {
                     fontSize: 14,
