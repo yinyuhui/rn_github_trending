@@ -13,7 +13,7 @@ const Trending = (props) => {
 
     const getData = async () => {
         const url =
-            'https://www.fastmock.site/mock/ea41ac236a32536f6d742544aeee0947/mock/test'
+            'https://api.github.com/search/repositories?q=vue&sort=stars'
         const result = await global.$get(url)
         setShowData(JSON.stringify(result))
     }

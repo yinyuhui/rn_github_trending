@@ -1,31 +1,80 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import {
+    View,
+    SafeAreaView,
+    StyleSheet,
+    LogBox,
+    RefreshControl,
+} from 'react-native'
 import { createMaterialTopTabNavigator } from 'react-navigation-tabs'
 import { createAppContainer } from 'react-navigation'
+import { useSelector, useDispatch } from 'react-redux'
+import { FlatList } from 'react-native-gesture-handler'
+import action from '../action'
+import PopularItem from '../components/PopularItem'
 
-const PopularTab = (props) => (
-    <View>
-        <Text>PopularTab</Text>
-        <Text
-            onPress={() => {
-                global.navigationUtil.goPage('Test', props)
-            }}>
-            goTest
-        </Text>
-        <Text
-            onPress={() => {
-                global.navigationUtil.goPage('IOS')
-            }}>
-            IOS
-        </Text>
-    </View>
-)
+const PopularTab = (props) => {
+    const storeName = props.tabLabel
+
+    const dispatch = useDispatch()
+    const popularState = useSelector((state) => state.popular)
+    const themeState = useSelector((state) => state.theme)
+
+    const url = `https://api.github.com/search/repositories?q=${storeName}&sort=stars`
+
+    const getData = () => {
+        dispatch(action.onPopularRefresh(url, storeName))
+    }
+
+    useEffect(() => {
+        getData()
+    }, [])
+
+    const showList = popularState[storeName] || { items: [], isLoading: false }
+    return (
+        <View style={{ paddingTop: 4 }}>
+            <FlatList
+                data={showList.items}
+                renderItem={(item) => <PopularItem item={item.item} />}
+                keyExtractor={(item) => `${item.id}`}
+                refreshControl={
+                    <RefreshControl
+                        title="loading..."
+                        titleColor={themeState.theme}
+                        tintColor={themeState.theme}
+                        colors={[themeState.theme]}
+                        onRefresh={getData}
+                        refreshing={showList.isLoading}
+                    />
+                }
+                // 距离底部的距离
+                onEndReachedThreshold={0.5}
+                onEndReached={() => {
+                    // 设置定时器保证会在滚动之后执行
+                    setTimeout(() => {
+                        // 默认会执行2次，为了解决此问题设置标志位
+                        // if (canLoadMore) {
+                        //     canLoadMore = false
+                        //     // loadMore
+                        // }
+                    })
+                }}
+                onMomentumScrollBegin={() => {
+                    // 刚刚开始滑动时触发
+                    // canLoadMore = true
+                }}
+            />
+        </View>
+    )
+}
 
 const getPopularTabs = (tabs) => {
+    const themeState = useSelector((state) => state.theme)
+
     let topTabs = Object.create(null)
     tabs.forEach((item) => {
         topTabs[item] = {
-            screen: (props) => <PopularTab {...props} />,
+            screen: (props) => <PopularTab {...props} tabLabel={item} />,
             navigationOptions: {
                 tabBarLabel: item,
             },
@@ -38,7 +87,7 @@ const getPopularTabs = (tabs) => {
                 scrollEnabled: true,
                 style: {
                     minWidth: 100,
-                    backgroundColor: 'rgba(220,114,117,.8)',
+                    backgroundColor: themeState.theme,
                 },
                 indicatorStyle: { height: 2, backgroundColor: '#fff' },
                 labelStyle: {
@@ -50,37 +99,34 @@ const getPopularTabs = (tabs) => {
 }
 
 const Popular = (props) => {
-    console.disableYellowBox = true
+    const themeState = useSelector((state) => state.theme)
+    LogBox.ignoreAllLogs()
     // FIXME: 动态 tab，但 PopularTabs 只能在 Popular 外部定义，如何根据后端返回动态加载
     TABS = ['JS', 'Vue', 'React', 'react native', 'Android', 'IOS']
     const [tabs, setTabs] = useState(['JS'])
+
     useEffect(() => {
-        setTimeout(() => {
-            setTabs(TABS)
-        }, 300)
+        setTabs(TABS)
     }, [])
 
     const PopularTabs = getPopularTabs(tabs)
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.safeContainer}>
             {PopularTabs ? <PopularTabs /> : null}
-        </View>
+        </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
+    safeContainer: {
         flex: 1,
-        // justifyContent: 'center',
-        // alignItems: 'center',
         backgroundColor: '#f5fcff',
-        marginTop: 30,
+        // backgroundColor: 'red',
     },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 20,
+    flatItem: {
+        backgroundColor: '#476287',
+        marginBottom: 8,
     },
 })
 export default Popular
