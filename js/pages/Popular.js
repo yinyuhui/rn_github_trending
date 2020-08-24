@@ -5,6 +5,8 @@ import {
     StyleSheet,
     LogBox,
     RefreshControl,
+    TouchableOpacity,
+    Text,
 } from 'react-native'
 import { createMaterialTopTabNavigator } from 'react-navigation-tabs'
 import { createAppContainer } from 'react-navigation'
@@ -12,6 +14,9 @@ import { useSelector, useDispatch } from 'react-redux'
 import { FlatList } from 'react-native-gesture-handler'
 import action from '../action'
 import PopularItem from '../components/PopularItem'
+import NavigationBar from '../components/NavigationBar'
+
+import AntDesign from 'react-native-vector-icons/AntDesign'
 
 const PopularTab = (props) => {
     const storeName = props.tabLabel
@@ -98,11 +103,35 @@ const getPopularTabs = (tabs) => {
     )
 }
 
+const LeftButton = () => {
+    return (
+        <TouchableOpacity
+            onPress={() => {
+                console.log('LeftButton onPress')
+            }}>
+            <AntDesign name="left" size={18} color="#fff" />
+        </TouchableOpacity>
+    )
+}
+
+const TitleView = () => {
+    return (
+        <View style={{ flexDirection: 'row' }}>
+            <Text>title</Text>
+            <TouchableOpacity
+                onPress={() => {
+                    console.log('TitleView onPress')
+                }}>
+                <Text>title button</Text>
+            </TouchableOpacity>
+        </View>
+    )
+}
+
 const Popular = (props) => {
-    const themeState = useSelector((state) => state.theme)
     LogBox.ignoreAllLogs()
     // FIXME: 动态 tab，但 PopularTabs 只能在 Popular 外部定义，如何根据后端返回动态加载
-    TABS = ['JS', 'Vue', 'React', 'react native', 'Android', 'IOS']
+    const TABS = ['JS', 'Vue', 'React', 'react native', 'Android', 'IOS']
     const [tabs, setTabs] = useState(['JS'])
 
     useEffect(() => {
@@ -113,6 +142,7 @@ const Popular = (props) => {
 
     return (
         <SafeAreaView style={styles.safeContainer}>
+            <NavigationBar LeftButton={LeftButton} TitleView={TitleView} />
             {PopularTabs ? <PopularTabs /> : null}
         </SafeAreaView>
     )
